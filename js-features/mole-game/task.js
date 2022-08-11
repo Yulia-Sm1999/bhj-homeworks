@@ -18,12 +18,14 @@ for (let i = 1; i < 10; i++) {
 let isWin = () => {
   if (molePoints.textContent == 10) {
     alert('Победа!');
-    location.reload()
+    molePoints.textContent = 0;
+    moleFails.textContent = 0;
   };
   
   if (moleFails.textContent == 5) {
     window.alert("Поражение");
-    location.reload()
+    molePoints.textContent = 0;
+    moleFails.textContent = 0;
   };
 }
 
