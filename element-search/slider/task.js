@@ -1,29 +1,48 @@
 let prevBtn = document.querySelector('div.slider__arrow_prev');
 let nextBtn = document.querySelector('div.slider__arrow_next');
 let photoCollection = [...document.querySelectorAll('div.slider__items div.slider__item')];
-let activePhoto = document.querySelector('div.slider__item_active');
+let sliderDots = [...document.querySelectorAll('div.slider__dot')];
 
-let makePhotoNotActive = () => {
-  activePhoto.classList.remove('slider__item_active');
+
+  for (let i = 0; i < sliderDots.length; i++) {
+    sliderDots[i].onclick = () => {
+
+      [...document.querySelectorAll('div.slider__dot_active')].forEach(activeDot => activeDot.classList.remove('slider__dot_active'));
+    
+      makePhotoNotActive();
+      sliderDots[i].classList.add('slider__dot_active');
+      photoCollection[i].classList.add('slider__item_active');
+    }
+  };
+
+function makePhotoNotActive() {
+  let activePhoto = photoCollection.findIndex(item => item.classList.contains('slider__item_active'));
+  photoCollection[activePhoto].classList.remove('slider__item_active');
 }
 
 let getPrevPhoto = () => {
-  if (!activePhoto.previousElementSibling) {
+  let activePhoto = photoCollection.findIndex(item => item.classList.contains('slider__item_active'));
+  photoCollection[activePhoto].classList.remove('slider__item_active');
+  [...document.querySelectorAll('div.slider__dot_active')].forEach(activeDot => activeDot.classList.remove('slider__dot_active'));
+  sliderDots[activePhoto].classList.add('slider__dot_active');
+
+  if (!photoCollection[activePhoto].previousElementSibling) {
     photoCollection[photoCollection.length - 1].classList.add('slider__item_active');
-    makePhotoNotActive;
   } else {
-    activePhoto.previousElementSibling.classList.add('slider__item_active');
-    makePhotoNotActive;
+    photoCollection[activePhoto - 1].classList.add('slider__item_active');
   }
 };
 
 let getnextPhoto = () => {
-  if (!activePhoto.nextElementSibling) {
+  let activePhoto = photoCollection.findIndex(item => item.classList.contains('slider__item_active'));
+  photoCollection[activePhoto].classList.remove('slider__item_active');
+  [...document.querySelectorAll('div.slider__dot_active')].forEach(activeDot => activeDot.classList.remove('slider__dot_active'));
+  sliderDots[activePhoto].classList.add('slider__dot_active');
+
+  if (!photoCollection[activePhoto].nextElementSibling) {
     photoCollection[photoCollection.length - photoCollection.length].classList.add('slider__item_active');
-    makePhotoNotActive;
   } else {
-    activePhoto.nextElementSibling.classList.add('slider__item_active');
-    makePhotoNotActive;
+    photoCollection[activePhoto + 1].classList.add('slider__item_active');
   }
 };
 

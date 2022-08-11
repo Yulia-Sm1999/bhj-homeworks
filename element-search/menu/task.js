@@ -6,15 +6,15 @@ for (let i = 0; i < menuLinks.length; i++) {
   menuLinks[i].onclick = () => {
     let parentLink = menuLinks[i].closest('li');
     let menuElement = parentLink.querySelector('ul');
-
-   
-    if ([...mainMenu.querySelectorAll('ul.menu_active')]) {
-      [...mainMenu.querySelectorAll('ul.menu_active')].forEach((el) => el.classList.remove('menu_active'));
-    };
-      
-    if (menuElement && menuElement.classList.contains('menu_active')) {
+    
+    if (menuElement.classList.contains('menu_active')) {
       menuElement.classList.remove('menu_active');
-    } else if (menuElement && !menuElement.classList.contains('menu_active')) {
+      return false;
+    } else {
+      if ([...mainMenu.querySelectorAll('ul.menu_active')]) {
+        [...mainMenu.querySelectorAll('ul.menu_active')].forEach(el => el.classList.remove('menu_active'));
+      };
+
       menuElement.classList.add('menu_active');
       return false;
     }
