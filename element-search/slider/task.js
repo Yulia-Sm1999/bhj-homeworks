@@ -3,48 +3,31 @@ let nextBtn = document.querySelector('div.slider__arrow_next');
 let photoCollection = [...document.querySelectorAll('div.slider__items div.slider__item')];
 let sliderDots = [...document.querySelectorAll('div.slider__dot')];
 
+let getActivePhoto = (photoNumber) => {
+  [...document.querySelectorAll('div.slider__dot_active')].forEach(activeDot => activeDot.classList.remove('slider__dot_active'));
 
-  for (let i = 0; i < sliderDots.length; i++) {
-    sliderDots[i].onclick = () => {
-
-      [...document.querySelectorAll('div.slider__dot_active')].forEach(activeDot => activeDot.classList.remove('slider__dot_active'));
-    
-      makePhotoNotActive();
-      sliderDots[i].classList.add('slider__dot_active');
-      photoCollection[i].classList.add('slider__item_active');
-    }
+  let makePhotoNotActive = () => {
+    let activePhoto = photoCollection.findIndex(item => item.classList.contains('slider__item_active'));
+    photoCollection[activePhoto].classList.remove('slider__item_active');
   };
+  makePhotoNotActive();
 
-function makePhotoNotActive() {
-  let activePhoto = photoCollection.findIndex(item => item.classList.contains('slider__item_active'));
-  photoCollection[activePhoto].classList.remove('slider__item_active');
-}
-
-let getPrevPhoto = () => {
-  let activePhoto = photoCollection.findIndex(item => item.classList.contains('slider__item_active'));
-  photoCollection[activePhoto].classList.remove('slider__item_active');
-  [...document.querySelectorAll('div.slider__dot_active')].forEach(activeDot => activeDot.classList.remove('slider__dot_active'));
-  sliderDots[activePhoto].classList.add('slider__dot_active');
-
-  if (!photoCollection[activePhoto].previousElementSibling) {
-    photoCollection[photoCollection.length - 1].classList.add('slider__item_active');
-  } else {
-    photoCollection[activePhoto - 1].classList.add('slider__item_active');
-  }
+  sliderDots[photoNumber].classList.add('slider__dot_active');
+  photoCollection[photoNumber].classList.add('slider__item_active');
 };
 
-let getnextPhoto = () => {
-  let activePhoto = photoCollection.findIndex(item => item.classList.contains('slider__item_active'));
-  photoCollection[activePhoto].classList.remove('slider__item_active');
-  [...document.querySelectorAll('div.slider__dot_active')].forEach(activeDot => activeDot.classList.remove('slider__dot_active'));
-  sliderDots[activePhoto].classList.add('slider__dot_active');
-
-  if (!photoCollection[activePhoto].nextElementSibling) {
-    photoCollection[photoCollection.length - photoCollection.length].classList.add('slider__item_active');
-  } else {
-    photoCollection[activePhoto + 1].classList.add('slider__item_active');
-  }
+prevBtn.onclick = () => {
+  let currentPhoto = photoCollection.findIndex(item => item.classList.contains('slider__item_active'));
+  (currentPhoto - 1 > -1) ? getActivePhoto(currentPhoto - 1) : getActivePhoto(photoCollection.length - 1);
 };
 
-prevBtn.onclick = getPrevPhoto;
-nextBtn.onclick = getnextPhoto;
+nextBtn.onclick = () => {
+  let currentPhoto = photoCollection.findIndex(item => item.classList.contains('slider__item_active'));
+  (currentPhoto + 1 < photoCollection.length) ? getActivePhoto(currentPhoto + 1) : getActivePhoto(photoCollection.length - photoCollection.length);
+};
+
+for (let i = 0; i < sliderDots.length; i++) {
+  sliderDots[i].onclick = () => {
+    getActivePhoto(i);
+  }
+};
