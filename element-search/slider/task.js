@@ -18,12 +18,12 @@ let getActivePhoto = (photoNumber) => {
 
 prevBtn.onclick = () => {
   let currentPhoto = photoCollection.findIndex(item => item.classList.contains('slider__item_active'));
-  (currentPhoto - 1 > -1) ? getActivePhoto(currentPhoto - 1) : getActivePhoto(photoCollection.length - 1);
+  getActivePhoto((currentPhoto - 1 > -1) ? currentPhoto - 1 : photoCollection.length - 1);
 };
 
 nextBtn.onclick = () => {
   let currentPhoto = photoCollection.findIndex(item => item.classList.contains('slider__item_active'));
-  (currentPhoto + 1 < photoCollection.length) ? getActivePhoto(currentPhoto + 1) : getActivePhoto(photoCollection.length - photoCollection.length);
+  getActivePhoto((currentPhoto + 1 < photoCollection.length) ? currentPhoto + 1 : photoCollection.length - photoCollection.length);
 };
 
 for (let i = 0; i < sliderDots.length; i++) {
