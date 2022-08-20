@@ -33,7 +33,8 @@ fontElements.forEach(currentFont => {
 textColors.forEach(currentTextColor => {
 
   currentTextColor.onclick = () => {
-    currentTextColor.classList.remove('color_active');
+    let textColors = [...document.querySelectorAll('.book__control_color a.color')];
+    textColors.forEach(el => el.classList.remove('color_active'));
     currentTextColor.classList.add('color_active');
 
     if (book.classList.contains('book_color-gray')) {
@@ -59,7 +60,8 @@ textColors.forEach(currentTextColor => {
 backgroundColors.forEach(currentBackgroundColor => {
 
   currentBackgroundColor.onclick = () => {
-    currentBackgroundColor.classList.remove('color_active');
+    let backgroundColors = [...document.querySelectorAll('.book__control_background a.color')];
+    backgroundColors.forEach(el => el.classList.remove('color_active'));
     currentBackgroundColor.classList.add('color_active');
 
     if (book.classList.contains('book_bg-gray')) {
