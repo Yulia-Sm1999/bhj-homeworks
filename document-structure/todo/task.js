@@ -1,30 +1,34 @@
 const addButton = document.getElementById('tasks__add');
 let taskInput = document.getElementById('task__input');
 let tasksArea = document.getElementById('tasks__list');
+let allTasks = [];
 
-function createTask() {
+function createTask(taskText) {
   let task = document.createElement('div');
   task.classList.add('task');
-  task.innerHTML = `<div class="task__title">${taskInput.value}</div><a href="#" class="task__remove">&times;</a>`;
+  task.innerHTML = `<div class="task__title">${taskText}</div><a href="#" class="task__remove">&times;</a>`;
 
   taskInput.value = '';
   tasksArea.appendChild(task);
-  localStorage.setItem('tasks', tasksArea.innerHTML);
+  allTasks.push(task);
 
   let deleteTaskBtn = task.querySelector('.task__remove');
-  deleteTaskBtn.addEventListener('click', () => task.remove());
-}
-
-document.addEventListener('keyup', event => {
-  if ((event.code === 'Enter') && (taskInput.value != '')) {
-    createTask();
-  };
-  event.preventDefault();
-});
+  deleteTaskBtn.addEventListener('click', () => {
+    task.remove();
+    localStorage.removeItem('task');
+  });
+};
 
 addButton.addEventListener('click', event => {
-  if ((addButton.click) && (taskInput.value != '')) {
-    createTask();
+  if ((addButton.click) && (taskInput.value.trim() != '')) {
+    createTask(taskInput.value);
   };
   event.preventDefault();
 });
+
+localStorage.setItem('tasks', JSON.stringify(allTasks));
+
+window.addEventListener('reload', () => {
+  let savedTasks = JSON.parse(localStorage.getItem('tasks'));
+  savedTasks.forEach(el => createTask(el));
+})

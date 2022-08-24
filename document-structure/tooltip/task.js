@@ -5,7 +5,10 @@ references.forEach((ref) => {
   tooltip.classList.add('tooltip');
   tooltip.textContent = ref.title;
   ref.insertAdjacentElement('afterend', tooltip);
-  tooltip.style.position = "absolute";
+  let { left, top } = ref.getBoundingClientRect();
+  tooltip.style.left = left + 'px';
+  tooltip.style.top = top + 'px';
+
 
   ref.addEventListener('click', event => {
     if (tooltip.classList.contains('tooltip_active')) {
@@ -15,6 +18,11 @@ references.forEach((ref) => {
       tooltip.classList.add('tooltip_active');
     };
     
+  console.log(tooltip.style.left);
+  console.log(tooltip.style.top);
+    
+  console.log(left);
+  console.log(top);
     event.preventDefault();
   })
 });

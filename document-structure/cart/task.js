@@ -23,12 +23,16 @@ productsToAdd.forEach(item => {
   item.addEventListener('click', () => {
     if ([...cart.children].some(el => el.dataset.id == productId)) {
       let productInCart = [...cart.children].find(el => el.dataset.id == productId);
+      let cartProductQuantity = productInCart.querySelector('.cart__product-count').innerHTML;
+      let changedQuanity = Number(quantity.innerText) - Number(cartProductQuantity);
       
-      if (Number(quantity.innerHTML) === 0) {
-        productInCart.remove();
+      if (changedQuanity > 0) {
+        productInCart.querySelector('.cart__product-count').innerHTML = Number(cartProductQuantity) + changedQuanity;
+        // cartProductQuantity = Number(cartProductQuantity) + changedQuanity;
       } else {
-        productInCart.querySelector('.cart__product-count').innerHTML = Number(quantity.innerHTML);
-      };
+        productInCart.querySelector('.cart__product-count').innerHTML = Number(cartProductQuantity) - Math.abs(changedQuanity);
+        // cartProductQuantity = Number(cartProductQuantity) - Math.abs(changedQuanity);
+      }
 
     } else if (Number(quantity.innerHTML) > 0) {
       let addedProduct = document.createElement('div');
