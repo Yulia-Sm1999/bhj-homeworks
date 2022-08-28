@@ -17,36 +17,33 @@ class Game {
     this.lossElement.textContent = 0;
     this.timer.textContent = this.wordElement.textContent.length;
   }
-  
+
   registerEvents() {
     document.addEventListener("keyup", (event) => {
       let letter = event.key.toLowerCase();
-      let currentSymbol = this.currentSymbol.innerHTML.toLowerCase();
-  
+      let currentSymbol = this.currentSymbol.innerText.toLowerCase();
 
-      let timer = () => {
-        let interval = setInterval(() => {
-          this.timer.textContent -= 1;
-          if (currentSymbol !== letter) {
-            clearInterval(interval);
-            this.timer.textContent = this.wordElement.textContent.length;
-            return;
-          };
-        }, 1000);
-
-        return interval;
+      if (currentSymbol === this.wordElement.innerText[0]) {
+        this.setTimer();
+        console.log(this.setTimer());
       };
 
-    
       if (currentSymbol == letter) {
-        timer();
         this.success();
       } else {
-        timer();
+        clearInterval(this.timerId);
+        this.timer.textContent = this.wordElement.textContent.length;
         this.fail();
       }
     })
-  };
+  };  
+
+  setTimer() {
+    this.timerId = setInterval(() => {
+      this.timer.innerText = Number(this.timer.innerText) - 1;
+    }, 1000);
+  }
+
 
   success() {
     this.currentSymbol.classList.add('symbol_correct');
