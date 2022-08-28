@@ -11,7 +11,7 @@ references.forEach(ref => {
     } else {
       tooltip.classList.add('tooltip_active');
       tooltip.textContent = ref.title;
-      ref.insertAdjacentElement('afterbegin', tooltip);
+      ref.insertAdjacentElement('afterend', tooltip);
     
       let { left, top } = ref.getBoundingClientRect();
       tooltip.style.left = left + 'px';
@@ -21,7 +21,3 @@ references.forEach(ref => {
     event.preventDefault();
   })
 });
-
-
-
-

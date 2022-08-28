@@ -13,7 +13,7 @@ let renderTasks = taskText => {
   taskToDelete = task.querySelector('.task__remove');
   taskToDelete.addEventListener('click', () => {
     task.remove();
-    let tasksText = [...tasksArea.children].map(el => el.textContent);
+    let tasksText = [...tasksArea.children].map(el => el.firstElementChild.textContent);
     savedTasks = tasksText;
     localStorage.setItem('tasks', JSON.stringify(savedTasks));
   });
@@ -39,4 +39,3 @@ button.addEventListener('click', event => {
   };
   event.preventDefault();
 });
-

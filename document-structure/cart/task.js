@@ -1,14 +1,48 @@
 let quantityButtons = [...document.querySelectorAll('.product__quantity-control')];
 let productsToAdd = [...document.querySelectorAll('.product__add')];
+let decreaseBtn = [...document.querySelectorAll('.product__quantity-control_dec')];
+let increaseBtn = [...document.querySelectorAll('.product__quantity-control_inc')];
+let cart = document.querySelector('.cart__products');
 
-quantityButtons.forEach(btn => {
-  let quantity = btn.parentElement.querySelector('.product__quantity-value');
+let showCart = () => {
+  if (cart.children.length == 0) {
+    cart.parentElement.style.display = 'none';
+  } else if (cart.children.length > 0) {
+    cart.parentElement.style.display = 'block';
+  }
+};
+showCart();
 
+decreaseBtn.forEach(btn => {
   btn.addEventListener('click', () => {
-    if ((btn.classList.contains('product__quantity-control_dec')) && (Number(quantity.innerHTML) !== 0)) {
-      quantity.innerHTML = Number(quantity.innerHTML) - 1;
-    } else if (btn.classList.contains('product__quantity-control_inc')) {
-      quantity.innerHTML = Number(quantity.innerHTML) + 1;
+    let quantity = btn.parentElement.querySelector('.product__quantity-value');
+    let product = quantity.closest('.product');
+
+    if (Number(quantity.innerText) !== 0) {
+      quantity.innerText = Number(quantity.innerText) - 1;
+
+      if ([...cart.children].some(el => el.dataset.id == product.dataset.id)) {
+        let productInCart = [...cart.children].find(el => el.dataset.id == product.dataset.id);
+        productInCart.querySelector('.cart__product-count').innerText = Number(productInCart.innerText) - 1;
+
+        if (productInCart.querySelector('.cart__product-count').innerText == 0) {
+          productInCart.remove();
+        }
+      }
+    };
+    showCart();
+  })
+});
+
+increaseBtn.forEach(btn => {
+  btn.addEventListener('click', () => {
+    let quantity = btn.parentElement.querySelector('.product__quantity-value');
+    let product = quantity.closest('.product');
+    quantity.innerText = Number(quantity.innerText) + 1;
+
+    if ([...cart.children].some(el => el.dataset.id == product.dataset.id)) {
+      let productInCart = [...cart.children].find(el => el.dataset.id == product.dataset.id);
+      productInCart.querySelector('.cart__product-count').innerText = Number(productInCart.innerText) + 1;
     }
   })
 });
@@ -18,21 +52,10 @@ productsToAdd.forEach(item => {
   let img = item.closest('.product').querySelector('.product__image');
   let product = item.closest('.product');
   let productId = product.dataset.id;
-  let cart = document.querySelector('.cart__products');
 
   item.addEventListener('click', () => {
-    if ([...cart.children].some(el => el.dataset.id == productId)) {
-      let productInCart = [...cart.children].find(el => el.dataset.id == productId);
-      let cartProductQuantity = productInCart.querySelector('.cart__product-count');
-      let changedQuanity = Number(quantity.innerText) - Number(cartProductQuantity.innerText);
-      
-      if (changedQuanity > 0) {
-        cartProductQuantity.innerText = Number(cartProductQuantity.innerText) + changedQuanity;
-      } else {
-        cartProductQuantity.innerText = Number(cartProductQuantity.innerText) - Math.abs(changedQuanity);
-      }
-
-    } else if (Number(quantity.innerText) > 0) {
+    if ((Number(quantity.innerText) > 0) && ([...cart.children].every(el => el.dataset.id != productId))) {
+      cart.parentElement.style.display = 'block';
       let addedProduct = document.createElement('div');
       cart.appendChild(addedProduct);
       addedProduct.outerHTML = `
