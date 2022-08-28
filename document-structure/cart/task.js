@@ -23,24 +23,22 @@ productsToAdd.forEach(item => {
   item.addEventListener('click', () => {
     if ([...cart.children].some(el => el.dataset.id == productId)) {
       let productInCart = [...cart.children].find(el => el.dataset.id == productId);
-      let cartProductQuantity = productInCart.querySelector('.cart__product-count').innerHTML;
-      let changedQuanity = Number(quantity.innerText) - Number(cartProductQuantity);
+      let cartProductQuantity = productInCart.querySelector('.cart__product-count');
+      let changedQuanity = Number(quantity.innerText) - Number(cartProductQuantity.innerText);
       
       if (changedQuanity > 0) {
-        productInCart.querySelector('.cart__product-count').innerHTML = Number(cartProductQuantity) + changedQuanity;
-        // cartProductQuantity = Number(cartProductQuantity) + changedQuanity;
+        cartProductQuantity.innerText = Number(cartProductQuantity.innerText) + changedQuanity;
       } else {
-        productInCart.querySelector('.cart__product-count').innerHTML = Number(cartProductQuantity) - Math.abs(changedQuanity);
-        // cartProductQuantity = Number(cartProductQuantity) - Math.abs(changedQuanity);
+        cartProductQuantity.innerText = Number(cartProductQuantity.innerText) - Math.abs(changedQuanity);
       }
 
-    } else if (Number(quantity.innerHTML) > 0) {
+    } else if (Number(quantity.innerText) > 0) {
       let addedProduct = document.createElement('div');
       cart.appendChild(addedProduct);
       addedProduct.outerHTML = `
       <div class="cart__product" data-id="${productId}">
         <img class="cart__product-image" src="${img.src}">
-        <div class="cart__product-count">${quantity.innerHTML}</div>
+        <div class="cart__product-count">${quantity.innerText}</div>
       </div>
       `
     }
