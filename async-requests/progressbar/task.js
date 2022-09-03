@@ -1,11 +1,17 @@
 let progress = document.getElementById('progress');
+const form = document.getElementById('form');
 
-let xhr = new XMLHttpRequest();
-xhr.upload.addEventListener('progress', (event) => {
-  let percentageOfComplete = event.loaded / event.total * 100; 
-  progress.value = percentageOfComplete; 
-  console.log(event);
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  let formData = new FormData(form);
+  let xhr = new XMLHttpRequest();
+  xhr.open('POST', 'https://netology-slow-rest.herokuapp.com/upload.php');
+
+  xhr.upload.addEventListener('progress', (event) => {
+    let percentageOfComplete = event.loaded / event.total * 100;
+    progress.value = percentageOfComplete;
+  });
+  
+  xhr.send(formData);
+  e.preventDefault();
 });
-
-xhr.open('POST', 'https://netology-slow-rest.herokuapp.com/upload.php');
-xhr.send();

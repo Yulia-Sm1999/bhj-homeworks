@@ -4,35 +4,40 @@ request.send();
 
 request.onload = () => {
   let response = JSON.parse(request.response);
-  let title = document.getElementById('poll__title');
-  let answersArea = document.getElementById('poll__answers');
-  
+  const title = document.getElementById('poll__title');
+  const answersArea = document.getElementById('poll__answers');
+
+  function makeXHR(method, url, etc) {
+    let xhr = new XMLHttpRequest();    
+    xhr.open(method, url);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+   
+    xhr.onload = () => {
+      let answer = JSON.parse(xhr.response);
+      answersArea.innerHTML = '';
+      let votes = 0;
+      answer.stat.forEach(el => votes += el.votes);
+      answer.stat.forEach(el => {
+        let percentage = Number((el.votes / votes * 100).toFixed(2));
+        answersArea.insertAdjacentHTML('beforeend', `<div>${el.answer}: ${percentage}%</div>`);
+      })  
+    };
+    xhr.send(etc);
+  };
+
   title.textContent = response.data.title;
   let answers = response.data.answers;
 
   answers.forEach(el => {
-    let answerBtn = document.createElement('button');
+    const answerBtn = document.createElement('button');
     answerBtn.classList.add('poll__answer');
     answerBtn.textContent = el;
     answersArea.appendChild(answerBtn);
 
     answerBtn.addEventListener('click', () => {
       alert('Спасибо, ваш голос засчитан!');
-      console.log(response.id);
-      console.log(([...answerBtn.parentElement.children].indexOf(answerBtn)));
-
-      let xhr = new XMLHttpRequest();
-      xhr.open('POST', 'https://netology-slow-rest.herokuapp.com/poll.php');
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhr.send(`vote=${response.id}&answer=${([...answerBtn.parentElement.children].indexOf(answerBtn))}`);
-
-      let xhr2 = new XMLHttpRequest();
-      xhr2.open('GET', 'https://netology-slow-rest.herokuapp.com/poll.php');
-      xhr2.onload = () => {
-        let answer = JSON.parse(xhr2.response);
-        console.log(answer);
-      };
-      xhr2.send();
+      voteData = `vote=${response.id}&answer=${([...answerBtn.parentElement.children].indexOf(answerBtn))}`;
+      makeXHR('POST', 'https://netology-slow-rest.herokuapp.com/poll.php', voteData);
     });
   });
-};
+}
