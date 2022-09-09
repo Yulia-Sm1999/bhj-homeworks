@@ -5,6 +5,7 @@ class Game {
     this.winsElement = container.querySelector('.status__wins');
     this.lossElement = container.querySelector('.status__loss');
     this.timer = container.querySelector('.status__time');
+    this.timerId;
 
     this.reset();
 
@@ -15,35 +16,32 @@ class Game {
     this.setNewWord();
     this.winsElement.textContent = 0;
     this.lossElement.textContent = 0;
-    this.timer.textContent = this.wordElement.textContent.length;
   }
 
   registerEvents() {
+
     document.addEventListener("keyup", (event) => {
       let letter = event.key.toLowerCase();
       let currentSymbol = this.currentSymbol.innerText.toLowerCase();
 
-      if (currentSymbol === this.wordElement.innerText[0]) {
-        this.setTimer();
-        console.log(this.setTimer());
-      };
-
       if (currentSymbol == letter) {
         this.success();
       } else {
-        clearInterval(this.timerId);
-        this.timer.textContent = this.wordElement.textContent.length;
-        this.fail();
+        this.fail(); 
       }
     })
   };  
 
   setTimer() {
+    this.timer.textContent = this.wordElement.textContent.length;
     this.timerId = setInterval(() => {
-      this.timer.innerText = Number(this.timer.innerText) - 1;
+      this.timer.textContent = Number(this.timer.textContent) - 1;
+      if (Number(this.timer.textContent) === 0) {
+        this.fail();
+      } 
     }, 1000);
+    
   }
-
 
   success() {
     this.currentSymbol.classList.add('symbol_correct');
@@ -60,6 +58,7 @@ class Game {
   }
 
   fail() {
+    clearInterval(this.timerId);
     if (++this.lossElement.textContent === 5) {
       alert('Вы проиграли!');
       this.reset();
@@ -69,8 +68,9 @@ class Game {
 
   setNewWord() {
     const word = this.getWord();
-
     this.renderWord(word);
+    clearInterval(this.timerId);
+    this.setTimer();
   }
 
   getWord() {
