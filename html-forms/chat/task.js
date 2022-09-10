@@ -16,35 +16,51 @@ let randomBotMessage = botMessages[Math.floor(Math.random() * botMessages.length
 let randomBotQuestion = botQuestions[Math.floor(Math.random() * botQuestions.length)];
 const messages = document.querySelector('.chat-widget__messages');
 let chatArea = document.querySelector('.chat-widget__messages-container');
-let currentTime = `${date.getHours()} : ${date.getMinutes()}`;
+let hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+let minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+let currentTime = `${hours} : ${minutes}`;
+let id;
 
 chatWidget.addEventListener('click', () => {
   chatWidget.classList.add('chat-widget_active');
 });
 
-let timer = () => {
-  setTimeout(() => {
-    messages.innerHTML += `
-      <div class="message">
-        <div class="message__time">
-          ${currentTime}</div>
-        <div class="message__text">${randomBotQuestion}</div>
-      </div>
-      `;
-      chatArea.scrollTop = chatArea.scrollHeight;
-  }, 5000);
+function interval() {
+  let intervalId = setInterval(() => {
+    getRandomBotMessage(randomBotQuestion);
+  }, 3000);
+  return intervalId;
+};
+
+function getRandomBotMessage(botElement) {
+  messages.innerHTML += `
+  <div class="message">
+    <div class="message__time">
+      ${currentTime}</div>
+    <div class="message__text">${botElement}</div>
+  </div>
+  `;
+  chatArea.scrollTop = chatArea.scrollHeight;
 };
 
 chatInput.addEventListener('focus', () => {
-  timer();
+  id = interval();
+});
+
+chatInput.addEventListener('blur', () => {
+  clearInterval(id);
 });
 
 document.addEventListener('keyup', event => {
-  let chatArea = document.querySelector('.chat-widget__messages-container');
-  let currentTime = `${date.getHours()} : ${date.getMinutes()}`;
-  clearTimeout(timer);
+  if (id) {
+    clearInterval(id);
+  };
+  
+  if (chatInput.value.trim().length === 0) {
+    id = interval();
+  };
 
-  if ((event.code === 'Enter') && (chatInput.value != '')) {        
+  if ((event.code === 'Enter') && (chatInput.value != '')) { 
     messages.innerHTML += `
       <div class="message message_client">
         <div class="message__time">
@@ -55,16 +71,7 @@ document.addEventListener('keyup', event => {
       </div>`;
     
     chatInput.value = '';
-
-    messages.innerHTML += `
-    <div class="message">
-      <div class="message__time">
-        ${currentTime}</div>
-      <div class="message__text">${randomBotMessage}</div>
-    </div>
-    `;
-    
-    chatArea.scrollTop = chatArea.scrollHeight;
-    timer();
+    getRandomBotMessage(randomBotMessage);
+    id = interval();
   };
 });
