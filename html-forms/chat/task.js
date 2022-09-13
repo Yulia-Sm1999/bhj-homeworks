@@ -1,6 +1,5 @@
 let chatWidget = document.querySelector('.chat-widget');
 let chatInput = document.getElementById('chat-widget__input');
-let date = new Date();
 let botMessages = [
   'Сейчас узнаю!',
   'Подождите секунду!',
@@ -12,13 +11,8 @@ let botQuestions = [
   'У Вас больше нет вопросов?',
   'Могу я ещё чем-то помочь?'
 ];
-let randomBotMessage = botMessages[Math.floor(Math.random() * botMessages.length)];
-let randomBotQuestion = botQuestions[Math.floor(Math.random() * botQuestions.length)];
 const messages = document.querySelector('.chat-widget__messages');
 let chatArea = document.querySelector('.chat-widget__messages-container');
-let hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-let minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-let currentTime = `${hours} : ${minutes}`;
 let id;
 
 chatWidget.addEventListener('click', () => {
@@ -27,16 +21,25 @@ chatWidget.addEventListener('click', () => {
 
 function interval() {
   let intervalId = setInterval(() => {
+    let randomBotQuestion = botQuestions[Math.floor(Math.random() * botQuestions.length)];
     getRandomBotMessage(randomBotQuestion);
   }, 3000);
   return intervalId;
 };
 
+function getCurrentTime() {
+  let date = new Date();
+  let hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+  let minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+  let time = `${hours} : ${minutes}`;
+  return time;
+}
+
 function getRandomBotMessage(botElement) {
   messages.innerHTML += `
   <div class="message">
     <div class="message__time">
-      ${currentTime}</div>
+      ${getCurrentTime()}</div>
     <div class="message__text">${botElement}</div>
   </div>
   `;
@@ -60,17 +63,18 @@ document.addEventListener('keyup', event => {
     id = interval();
   };
 
-  if ((event.code === 'Enter') && (chatInput.value != '')) { 
+  if ((event.code === 'Enter') && (chatInput.value != '')) {
     messages.innerHTML += `
       <div class="message message_client">
         <div class="message__time">
-        ${currentTime}</div>
+        ${getCurrentTime()}</div>
         <div class="message__text">
           ${chatInput.value}
         </div>
       </div>`;
     
     chatInput.value = '';
+    let randomBotMessage = botMessages[Math.floor(Math.random() * botMessages.length)];
     getRandomBotMessage(randomBotMessage);
     id = interval();
   };
